@@ -1,0 +1,102 @@
+// Data model for v1 — Confluence > Specifications §2.
+// Prisma models use camelCase; the database uses snake_case (via @map).
+// v1.1 / v2 entities (Source, NoteLink, ReviewState, Attachment) are added
+// with their Jira stories.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  displayName  String    @map("display_name")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  subjects     Subject[]
+  notes        Note[]
+  tags         Tag[]
+
+  @@map("users")
+}
+
+/// Subjects group notes (FR-20). Deleting one moves its notes to the Inbox.
+model Subject {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  name      String   @db.VarChar(100)
+  color     String?  @db.VarChar(7)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notes     Note[]
+
+  @@unique([userId, name])
+  @@map("subjects")
+}
+
+model Note {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  /// null = Inbox. Exactly one subject per note (FR-21).
+  subjectId String?   @map("subject_id") @db.Uuid
+  title     String    @db.VarChar(200)
+  /// Markdown, up to 1 MB (validated in the API).
+  body      String    @default("")
+  isPinned  Boolean   @default(false) @map("is_pinned")
+  /// Non-null = in Trash (FR-13); purged after 30 days.
+  deletedAt DateTime? @map("deleted_at")
+  /// Incremented on every save; used to detect edit conflicts (409).
+  version   Int       @default(1)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   Subject?  @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  tags      NoteTag[]
+
+  // Full-text search (FR-30): a generated `search_vector tsvector` column and
+  // its GIN index are added in a hand-written SQL migration, because Prisma
+  // cannot model generated tsvector columns. See Specifications §4.2.
+  @@index([userId, deletedAt, updatedAt])
+  @@index([subjectId])
+  @@map("notes")
+}
+
+model Tag {
+  id     String    @id @default(uuid()) @db.Uuid
+  userId String    @map("user_id") @db.Uuid
+  /// Lowercase, 1–50 chars, no spaces.
+  name   String    @db.VarChar(50)
+  user   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notes  NoteTag[]
+
+  @@unique([userId, name])
+  @@map("tags")
+}
+
+model NoteTag {
+  noteId String @map("note_id") @db.Uuid
+  tagId  String @map("tag_id") @db.Uuid
+  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, tagId])
+  @@index([tagId])
+  @@map("note_tags")
+}
+
+/// Login sessions, stored in PostgreSQL so they survive API restarts
+/// (Specifications §6). Same layout as connect-pg-simple's table.
+model Session {
+  sid    String   @id @db.VarChar
+  sess   Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire])
+  @@map("session")
+}
