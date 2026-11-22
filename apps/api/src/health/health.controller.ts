@@ -1,7 +1,8 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
 import { ApiOkResponse, ApiServiceUnavailableResponse, ApiTags } from '@nestjs/swagger';
-import type { HealthStatus } from '@notes/shared';
+import { ErrorResponseDto } from '../common/dto/error-response.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { HealthStatusDto } from './dto/health-status.dto';
 
 /**
  * GET /api/v1/health — public. Used by the web app's offline indicator
@@ -13,9 +14,9 @@ export class HealthController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get()
-  @ApiOkResponse({ description: 'API and database are reachable' })
-  @ApiServiceUnavailableResponse({ description: 'Database is not reachable' })
-  async check(): Promise<HealthStatus> {
+  @ApiOkResponse({ type: HealthStatusDto, description: 'API and database are reachable' })
+  @ApiServiceUnavailableResponse({ type: ErrorResponseDto, description: '`database_unavailable`' })
+  async check(): Promise<HealthStatusDto> {
     try {
       await this.prisma.$queryRaw`SELECT 1`;
     } catch {

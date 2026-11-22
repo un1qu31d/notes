@@ -1,6 +1,11 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "strict": true,
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -9,8 +14,11 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "incremental": true,
     "strictPropertyInitialization": false
   },
-  "include": ["src", "prisma", "test"]
+  "include": [
+    "src",
+    "prisma",
+    "test"
+  ]
 }

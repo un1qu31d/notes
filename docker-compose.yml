@@ -7,7 +7,8 @@ services:
       POSTGRES_PASSWORD: notes
       POSTGRES_DB: notes
     ports:
-      - "5432:5432"
+      # 5433 on your machine, so it never clashes with a locally installed PostgreSQL on 5432
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:

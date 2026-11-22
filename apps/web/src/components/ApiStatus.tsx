@@ -1,19 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getHealth } from '@/lib/api';
-
-type State = 'checking' | 'ok' | 'down';
+import { useHealthCheck } from '@notes/api-client/react';
 
 /** Smoke test for the web → API → database chain via GET /api/v1/health. */
 export function ApiStatus() {
-  const [state, setState] = useState<State>('checking');
-
-  useEffect(() => {
-    getHealth()
-      .then(() => setState('ok'))
-      .catch(() => setState('down'));
-  }, []);
+  const { isPending, isSuccess } = useHealthCheck();
+  const state = isPending ? 'checking' : isSuccess ? 'ok' : 'down';
 
   const label = {
     checking: 'Checking API…',

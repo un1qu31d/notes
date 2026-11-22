@@ -1,29 +1,36 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/http-exception.filter';
+import { API_PREFIX, buildOpenApiDocument } from './openapi';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Every route lives under /api/v1 (Specifications §3).
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix(API_PREFIX);
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.enableShutdownHooks();
 
-  // OpenAPI docs at /api/docs (NFR-09).
-  const config = new DocumentBuilder()
-    .setTitle('Learning Notes API')
-    .setVersion('0.1.0')
-    .addCookieAuth('sid')
-    .build();
-  SwaggerModule.setup('api/docs', app, SwaggerModule.createDocument(app, config));
+  // API docs, outside production only:
+  //   /api/docs       interactive Swagger UI
+  //   /api/docs-json  the OpenAPI contract that @notes/api-client is generated from
+  if (process.env.NODE_ENV !== 'production') {
+    SwaggerModule.setup('api/docs', app, buildOpenApiDocument(app), {
+      jsonDocumentUrl: 'api/docs-json',
+      swaggerOptions: { withCredentials: true, persistAuthorization: true },
+    });
+  }
 
   const port = Number(process.env.API_PORT ?? 4000);
   await app.listen(port);
-  console.log(`API listening on http://localhost:${port}/api/v1 (docs: /api/docs)`);
+  console.log(`API listening on http://localhost:${port}/${API_PREFIX}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`API docs: http://localhost:${port}/api/docs (contract: /api/docs-json)`);
+  }
 }
 
 void bootstrap();

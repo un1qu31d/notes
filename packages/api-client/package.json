@@ -1,0 +1,36 @@
+{
+  "name": "@notes/api-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Typed client for the Learning Notes API — generated from the API's OpenAPI contract",
+  "exports": {
+    ".": "./src/index.ts",
+    "./react": "./src/react.ts"
+  },
+  "types": "./src/index.ts",
+  "sideEffects": false,
+  "scripts": {
+    "contract:fetch": "node scripts/fetch-contract.mjs",
+    "generate": "npm run contract:fetch && npm run generate:offline",
+    "generate:offline": "node scripts/clean-generated.mjs && orval --config orval.config.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.25.0"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-query": { "optional": true },
+    "react": { "optional": true }
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.85.0",
+    "@types/react": "^19.1.0",
+    "orval": "^7.10.0",
+    "react": "^19.1.0",
+    "typescript": "^5.9.0"
+  }
+}
