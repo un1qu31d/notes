@@ -14,5 +14,5 @@ Phase 1 — domain model and architecture decisions. No application code yet.
 
 ## Links
 
-- Work tracking: [Jira project NOTES](https://chlvrt-notes.atlassian.net/jira/software/projects/NOTES/boards)
+- Work tracking: [Jira project NOTES](https://chlvrt-notes.atlassian.net/jira/software/projects/NOTES/boards/2)
 - Documentation: [Confluence space Notes](https://chlvrt-notes.atlassian.net/wiki/spaces/NOTES/overview)
