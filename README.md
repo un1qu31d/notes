@@ -10,7 +10,7 @@ A personal web app for writing, organizing, finding and reviewing learning notes
 
 ## Status
 
-Phase 1 — domain model and architecture decisions, now in review. No application code yet; Phase 2 (walking skeleton) comes next.
+Phase 1 (domain model and architecture decisions) is done. Phase 2 — the walking skeleton — comes next.
 
 ## Links
 
