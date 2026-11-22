@@ -15,6 +15,7 @@ export function buildOpenApiDocument(app: INestApplication): OpenAPIObject {
     .setTitle('Learning Notes API')
     .setDescription('REST API for the Learning Notes System. See Confluence › Specifications §3.')
     .setVersion('0.1.0')
+    .addCookieAuth('sid')
     .build();
 
   return SwaggerModule.createDocument(app, config, {

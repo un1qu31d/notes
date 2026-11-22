@@ -37,7 +37,8 @@ Prerequisites: **Node.js 22+** and **Docker**.
 # 1. Install dependencies (creates package-lock.json — commit it)
 npm install
 
-# 2. Configure: copy the example and fill in OWNER_EMAIL / OWNER_PASSWORD
+# 2. Configure: copy the example, then set SESSION_SECRET (openssl rand -hex 32),
+#    OWNER_EMAIL and OWNER_PASSWORD (at least 10 characters)
 cp .env.example .env
 
 # 3. Start PostgreSQL
@@ -55,7 +56,7 @@ npm run dev
 
 Then open:
 
-- Web app: <http://localhost:3000> — the home page shows whether the API and database are reachable
+- Web app: <http://localhost:3000> — sign in with your owner account
 - API health: <http://localhost:4000/api/v1/health>
 - API docs: <http://localhost:4000/api/docs>
 

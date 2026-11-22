@@ -6,10 +6,79 @@
  * OpenAPI spec version: 0.1.0
  */
 import type {
-  HealthStatusDto
+  HealthStatusDto,
+  LoginDto,
+  UserDto
 } from './model';
 
 import { apiFetch } from '../fetcher';
+export const getAuthLoginUrl = () => {
+
+
+  
+
+  return `/api/v1/auth/login`
+}
+
+export const authLogin = async (loginDto: LoginDto, options?: RequestInit): Promise<UserDto> => {
+  
+  return apiFetch<UserDto>(getAuthLoginUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      loginDto,)
+  }
+);}
+
+
+
+/**
+ * @summary Public so signing out always succeeds, even with an expired session.
+ */
+export const getAuthLogoutUrl = () => {
+
+
+  
+
+  return `/api/v1/auth/logout`
+}
+
+export const authLogout = async ( options?: RequestInit): Promise<void> => {
+  
+  return apiFetch<void>(getAuthLogoutUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+export const getAuthMeUrl = () => {
+
+
+  
+
+  return `/api/v1/auth/me`
+}
+
+export const authMe = async ( options?: RequestInit): Promise<UserDto> => {
+  
+  return apiFetch<UserDto>(getAuthMeUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
 export const getHealthCheckUrl = () => {
 
 

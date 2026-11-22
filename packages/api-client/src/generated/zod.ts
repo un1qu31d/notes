@@ -7,6 +7,29 @@
  */
 import zod from 'zod';
 
+export const authLoginBodyEmailMax = 254;export const authLoginBodyPasswordMax = 200;
+
+export const authLoginBody = zod.object({
+  "email": zod.string().email().max(authLoginBodyEmailMax),
+  "password": zod.string().min(1).max(authLoginBodyPasswordMax)
+})
+
+export const authLoginResponse = zod.object({
+  "id": zod.string(),
+  "email": zod.string(),
+  "display_name": zod.string(),
+  "created_at": zod.string().describe('ISO 8601 UTC timestamp.')
+})
+
+
+export const authMeResponse = zod.object({
+  "id": zod.string(),
+  "email": zod.string(),
+  "display_name": zod.string(),
+  "created_at": zod.string().describe('ISO 8601 UTC timestamp.')
+})
+
+
 export const healthCheckResponse = zod.object({
   "status": zod.enum(['ok'])
 })

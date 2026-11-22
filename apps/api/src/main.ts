@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { configureSession } from './auth/session';
 import { HttpExceptionFilter } from './common/http-exception.filter';
 import { API_PREFIX, buildOpenApiDocument } from './openapi';
 
@@ -13,6 +14,7 @@ async function bootstrap() {
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
+  configureSession(app);
   app.enableShutdownHooks();
 
   // API docs, outside production only:

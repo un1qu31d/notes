@@ -11,3 +11,5 @@ export * from './errorDetailDtoFields';
 export * from './errorResponseDto';
 export * from './healthStatusDto';
 export * from './healthStatusDtoStatus';
+export * from './loginDto';
+export * from './userDto';

@@ -1,3 +1,4 @@
+import { AccountBar } from '@/components/AccountBar';
 import { ApiStatus } from '@/components/ApiStatus';
 
 export default function HomePage() {
@@ -10,6 +11,7 @@ export default function HomePage() {
           NOTES.
         </p>
       </div>
+      <AccountBar />
       <ApiStatus />
     </main>
   );
