@@ -10,9 +10,13 @@ A personal web app for writing, organizing, finding and reviewing learning notes
 
 ## Status
 
-Phase 1 — domain model and architecture decisions. No application code yet.
+Phase 1 (domain model and architecture decisions) is done. Phase 2 — the walking skeleton — comes next.
 
 ## Links
 
 - Work tracking: [Jira project NOTES](https://chlvrt-notes.atlassian.net/jira/software/projects/NOTES/boards/2)
 - Documentation: [Confluence space Notes](https://chlvrt-notes.atlassian.net/wiki/spaces/NOTES/overview)
+  - [Domain model](https://chlvrt-notes.atlassian.net/wiki/spaces/NOTES/pages/1048586/Domain+model) — what the system is for and its rules
+  - [Decisions](https://chlvrt-notes.atlassian.net/wiki/spaces/NOTES/pages/753673/Decisions) — architecture decision records (ADRs)
+  - [Glossary](https://chlvrt-notes.atlassian.net/wiki/spaces/NOTES/pages/1146937/Glossary) — the words of the domain
+  - [Data model](https://chlvrt-notes.atlassian.net/wiki/spaces/NOTES/pages/1146958/Data+model) — the database tables
